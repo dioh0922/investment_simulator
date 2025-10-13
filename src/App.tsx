@@ -1,33 +1,46 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [value, setValue] = useState(0)
+  const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(Number(e.target.value))
+  }
+  const [spread, setSpread] = useState(0.02)
+  const spreadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSpread(Number(e.target.value))
+  }
+
+  const [lossRateLimit, setLossRateLimit] = useState(0.0)
+  const lossRateLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLossRateLimit(Number(e.target.value))
+  }
+  
+  const profitLimitValue = useMemo(() => {
+    const result = ((1 + Number(spread)) * value) * ((100 + (lossRateLimit * 2)) / 100.0)
+    return result.toFixed(2)
+  }, [value, spread, lossRateLimit])
+
+  const lossLimitValue = useMemo(() => {
+    const result = ((1 + Number(spread)) * value) * ((100 - lossRateLimit) / 100.0)
+    return result.toFixed(2)
+  }, [value, spread, lossRateLimit])
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        スプレッド：<input type="number" step="0.01" value={spread} onChange={spreadChange}/>
+        損益範囲：<input type="number" value={lossRateLimit} onChange={lossRateLimitChange}/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        エントリー：<input type="number" value={value} onChange={valueChange}/>
+        <p>取得価格：{value}</p>
+        <p>利確ライン：{profitLimitValue}</p>
+        <p>損切りライン：{lossLimitValue}</p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
