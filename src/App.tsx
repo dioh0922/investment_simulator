@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Gemini from './Gemini'
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
     setSpread(Number(e.target.value))
   }
 
-  const [lossRateLimit, setLossRateLimit] = useState(0.0)
+  const [lossRateLimit, setLossRateLimit] = useState(3)
   const lossRateLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLossRateLimit(Number(e.target.value))
   }
@@ -41,6 +42,7 @@ function App() {
         <p>利確ライン：{profitLimitValue}</p>
         <p>損切りライン：{lossLimitValue}</p>
       </div>
+      <Gemini/>
     </>
   )
 }
