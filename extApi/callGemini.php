@@ -4,6 +4,12 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 require_once __DIR__ . '/vendor/autoload.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204); // No Content
+    exit();
+}
+
+
 use Dotenv\Dotenv;
 
 // .envの読み込み
