@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204); // No Content
     exit();
@@ -21,6 +22,8 @@ $data = json_decode($rawData, true);
 $base64 = $data['base64'];
 $mimeType = $data['mime'];
 $prompt = $data['prompt'];
+$prompt .= "出力は以下のjsonにしてください\n";
+$prompt .= '{"answer":"回答内容"}';
 if(empty($base64) || empty($mimeType) || empty($prompt)){
   die("リクエストが不正です。");
 }
