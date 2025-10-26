@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios'
+import { Stack, Box, Button, Paper, TextField, Typography } from '@mui/material'
+
 
 function Gemini() {
 
@@ -60,27 +62,59 @@ function Gemini() {
   
   return (
     <>
-      <div>
-        <input type="file" accept="image/*" onChange={handleFileChange}/>
-        <LoadingButton
-          loading={loading}
-          onClick={callApi}
-          disabled={!fileLoaded}
-          variant="contained"
-        >
-          分析開始
-        </LoadingButton>
-      </div>
-      <div>
-        <textarea
-        name="result"
-        readOnly
-        value={result}
-        onChange={resultChange}
-        placeholder="gemini ask"
-        rows={50}
-        cols={80}></textarea>
-      </div>
+      <Paper
+        sx={{
+          p: 3,
+          m: "auto",
+          maxWidth: 800,
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+        }}
+        elevation={3}
+      >
+        {/* --- アップロードとボタン --- */}
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ minWidth: 150 }}
+          >
+            画像を選択
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </Button>
+
+          <LoadingButton
+            loading={loading}
+            onClick={callApi}
+            disabled={!fileLoaded}
+            variant="contained"
+          >
+            分析開始
+          </LoadingButton>
+        </Stack>
+
+        {/* --- 結果表示エリア --- */}
+        <Box>
+          <TextField
+            multiline
+            fullWidth
+            value={result}
+            onChange={resultChange}
+            placeholder="Gemini ask result..."
+            rows={20}
+            variant="outlined"
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Box>
+      </Paper>
     </>
   )
 }
