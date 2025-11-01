@@ -1,20 +1,40 @@
-import { useState, useMemo } from 'react'
+import { useState, } from 'react'
 
 import './App.css'
 import Gemini from './Gemini'
 import Trade from './Trade'
 import { Grid } from '@mui/material'
 
-function App() {
-
+const App = () => {
+  const [trigger, setTrigger] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [base64, setBase64] = useState<string | null>('')
+  const handleLoadFile = (e: string) => {
+    setBase64(e)
+  }
+  const callApi = () => {
+    setLoading(true)
+    setTrigger(prev => prev + 1)
+  }
+  const apiDone = () => {
+    setLoading(false)
+  }
   return (
     <>
       <Grid container spacing={2}>
         <Grid size={{xs: 12, md:6}}>
-          <Trade/>
+          <Trade
+          sendFile={handleLoadFile}
+          callApi={callApi}
+          loading={loading}
+          disabled={!base64}/>
         </Grid>
         <Grid size={{xs: 12, md:6}}>
-          <Gemini/>
+          <Gemini
+            base64={base64}
+            trigger={trigger}
+            loading={loading}
+            apiDone={apiDone}/>
         </Grid>
       </Grid>
     </>

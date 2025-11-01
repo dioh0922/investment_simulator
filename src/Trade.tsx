@@ -1,7 +1,13 @@
 import { useState, useMemo } from 'react'
-import { Stack, Grid, Paper, TextField, Typography } from '@mui/material'
+import { Stack, Grid, Button, Paper, TextField, Typography } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 
-function Trade(){
+const Trade = ({ sendFile, callApi, loading, disabled }: {
+  sendFile: (file: string) => void,
+  callApi: () => void,
+  loading: boolean,
+  disabled: boolean
+}) => {
 
     const [value, setValue] = useState(0)
     const valueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +32,22 @@ function Trade(){
       const result = ((1 + Number(spread)) * value) * ((100 - lossRateLimit) / 100.0)
       return result.toFixed(2)
     }, [value, spread, lossRateLimit])
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+  
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        //setBase64(result)
+        sendFile(result)
+      }
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error)
+      }
+      reader.readAsDataURL(file)
+    }      
 
   return (
     <>
@@ -78,6 +100,33 @@ function Trade(){
           <Typography variant="body1" color="error.main">
             損切りライン：{lossLimitValue}
           </Typography>
+        </Stack>
+      </Paper>
+      <Paper variant="outlined" sx={{ p: 2 }}>
+        {/* --- アップロードとボタン --- */}
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{ minWidth: 150 }}
+          >
+            画像を選択
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </Button>
+
+          <LoadingButton
+            loading={loading}
+            onClick={callApi}
+            disabled={disabled}
+            variant="contained"
+          >
+            分析開始
+          </LoadingButton>
         </Stack>
       </Paper>
     </>
