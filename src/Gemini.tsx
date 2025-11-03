@@ -1,6 +1,6 @@
 import { useState, useEffect  } from 'react'
 import axios from 'axios'
-import { Box, Paper, TextField } from '@mui/material'
+import { Box, Paper, TextField, CircularProgress } from '@mui/material'
 
 
 const Gemini = ({base64, trigger, loading, apiDone}:{
@@ -59,7 +59,7 @@ const Gemini = ({base64, trigger, loading, apiDone}:{
       >
 
         {/* --- 結果表示エリア --- */}
-        <Box>
+        <Box sx={{position: 'relative', width: '100%'}}>
           <TextField
             multiline
             fullWidth
@@ -72,6 +72,21 @@ const Gemini = ({base64, trigger, loading, apiDone}:{
               readOnly: true,
             }}
           />
+          {loading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                bgcolor: 'rgba(255,255,255,0.6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 1,
+              }}
+            >
+            <CircularProgress size={"12rem"} />
+            </Box>
+          )}
         </Box>
       </Paper>
     </>

@@ -63,7 +63,7 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
     }
 
     const [expanded, setExpanded] = useState<string | false>(false)
-    const handleExpand = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    const handleExpand = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false)
     }
 
