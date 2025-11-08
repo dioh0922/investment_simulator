@@ -9,12 +9,26 @@ const App = () => {
   const [trigger, setTrigger] = useState(0)
   const [loading, setLoading] = useState(false)
   const [base64, setBase64] = useState<string | null>('')
+  const [simulateParam, setSimulateParam] = useState<{
+    value: number,
+    spread: number,
+    lossRateLimit: number,
+  } | null>(null)
+
   const handleLoadFile = (e: string) => {
     setBase64(e)
   }
   const callApi = () => {
     setLoading(true)
     setTrigger(prev => prev + 1)
+  }
+  const callSimulate = (e: {
+    value: number,
+    spread: number,
+    lossRateLimit: number,
+  }) => {
+    setLoading(true)
+    setSimulateParam(e)
   }
   const apiDone = () => {
     setLoading(false)
@@ -26,6 +40,7 @@ const App = () => {
           <Trade
           sendFile={handleLoadFile}
           callApi={callApi}
+          callSimulate={callSimulate}
           loading={loading}
           disabled={!base64}/>
         </Grid>
@@ -34,6 +49,7 @@ const App = () => {
             base64={base64}
             trigger={trigger}
             loading={loading}
+            simulate={simulateParam}
             apiDone={apiDone}/>
         </Grid>
       </Grid>

@@ -15,9 +15,14 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 
-const Trade = ({ sendFile, callApi, loading, disabled }: {
+const Trade = ({ sendFile, callApi, callSimulate, loading, disabled }: {
   sendFile: (file: string) => void,
   callApi: () => void,
+  callSimulate: (param: {
+    value: number,
+    spread: number,
+    lossRateLimit: number,
+  }) => void,
   loading: boolean,
   disabled: boolean
 }) => {
@@ -72,11 +77,20 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
       callApi()
     }
 
+    const handleSimulate = () => {
+      setExpanded('simulate')
+      callSimulate({
+        value: value,
+        spread: spread,
+        lossRateLimit: lossRateLimit,
+      })
+    }
+
   return (
     <>
       <Box sx={{width: '100%'}}>
         <Accordion
-          expanded={expanded === 'panel1'}
+          expanded={expanded === 'panel1' || expanded === 'simulate'}
           onChange={handleExpand('panel1')}
         >
           <AccordionSummary
@@ -139,7 +153,7 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
         </Accordion>
 
         <Accordion
-          expanded={expanded === 'panel2'}
+          expanded={expanded === 'panel2' || expanded === 'simulate'}
           onChange={handleExpand('panel2')}
         >
           <AccordionSummary
@@ -172,14 +186,23 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
                   disabled={disabled}
                   variant="contained"
                 >
-                  分析開始
+                  チャート分析
+                </LoadingButton>
+
+                <LoadingButton
+                  loading={loading}
+                  onClick={handleSimulate}
+                  disabled={disabled}
+                  variant="contained"
+                >
+                  シミュレーション
                 </LoadingButton>
               </Stack>
             </Paper>
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel3'}
+          expanded={expanded === 'panel3' || expanded === 'simulate'}
           onChange={handleExpand('panel3')}
         >
           <AccordionSummary
