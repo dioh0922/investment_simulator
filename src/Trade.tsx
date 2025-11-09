@@ -165,38 +165,57 @@ const Trade = ({ sendFile, callApi, callSimulate, loading, disabled }: {
           <AccordionDetails>
             <Paper variant="outlined" sx={{ p: 2 }}>
               {/* --- アップロードとボタン --- */}
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Button
-                  variant="outlined"
-                  component="label"
-                  sx={{ minWidth: 150 }}
-                >
-                  画像を選択
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={handleFileChange}
-                  />
-                </Button>
+                <Grid container spacing={2}>
+                  <Grid size={12}>
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      fullWidth
+                    >
+                      画像を選択
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </Button>
+                  </Grid>
+                </Grid>
+            </Paper>
+            <Paper variant="outlined" sx={{ p: 2 }}>
+              <Stack direction="row" spacing={2} alignItems="center" sx={{
+                  flexWrap: 'nowrap',
+                  overflowX: 'auto',
+                  '& button': {
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0, // ←縮まないように
+                  }
+                }}>
+                <Grid container spacing={2}>
+                  <Grid size={6}>
+                    <LoadingButton
+                      loading={loading}
+                      onClick={handleApiCall}
+                      disabled={disabled}
+                      variant="contained"
+                    >
+                      チャート分析
+                    </LoadingButton>
+                  </Grid>
+                  <Grid size={6}>
 
-                <LoadingButton
-                  loading={loading}
-                  onClick={handleApiCall}
-                  disabled={disabled}
-                  variant="contained"
-                >
-                  チャート分析
-                </LoadingButton>
-
-                <LoadingButton
-                  loading={loading}
-                  onClick={handleSimulate}
-                  disabled={disabled}
-                  variant="contained"
-                >
-                  シミュレーション
-                </LoadingButton>
+                  <LoadingButton
+                    loading={loading}
+                    onClick={handleSimulate}
+                    disabled={disabled}
+                    variant="contained"
+                  >
+                    シミュレーション
+                  </LoadingButton>
+                  </Grid>
+                </Grid>
+                
               </Stack>
             </Paper>
           </AccordionDetails>
