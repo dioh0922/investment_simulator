@@ -15,9 +15,14 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 
-const Trade = ({ sendFile, callApi, loading, disabled }: {
+const Trade = ({ sendFile, callApi, callSimulate, loading, disabled }: {
   sendFile: (file: string) => void,
   callApi: () => void,
+  callSimulate: (param: {
+    value: number,
+    spread: number,
+    lossRateLimit: number,
+  }) => void,
   loading: boolean,
   disabled: boolean
 }) => {
@@ -72,11 +77,20 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
       callApi()
     }
 
+    const handleSimulate = () => {
+      setExpanded('simulate')
+      callSimulate({
+        value: value,
+        spread: spread,
+        lossRateLimit: lossRateLimit,
+      })
+    }
+
   return (
     <>
       <Box sx={{width: '100%'}}>
         <Accordion
-          expanded={expanded === 'panel1'}
+          expanded={expanded === 'panel1' || expanded === 'simulate'}
           onChange={handleExpand('panel1')}
         >
           <AccordionSummary
@@ -139,7 +153,7 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
         </Accordion>
 
         <Accordion
-          expanded={expanded === 'panel2'}
+          expanded={expanded === 'panel2' || expanded === 'simulate'}
           onChange={handleExpand('panel2')}
         >
           <AccordionSummary
@@ -151,35 +165,63 @@ const Trade = ({ sendFile, callApi, loading, disabled }: {
           <AccordionDetails>
             <Paper variant="outlined" sx={{ p: 2 }}>
               {/* --- アップロードとボタン --- */}
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Button
-                  variant="outlined"
-                  component="label"
-                  sx={{ minWidth: 150 }}
-                >
-                  画像を選択
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={handleFileChange}
-                  />
-                </Button>
+                <Grid container spacing={2}>
+                  <Grid size={12}>
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      fullWidth
+                    >
+                      画像を選択
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </Button>
+                  </Grid>
+                </Grid>
+            </Paper>
+            <Paper variant="outlined" sx={{ p: 2 }}>
+              <Stack direction="row" spacing={2} alignItems="center" sx={{
+                  flexWrap: 'nowrap',
+                  overflowX: 'auto',
+                  '& button': {
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0, // ←縮まないように
+                  }
+                }}>
+                <Grid container spacing={2}>
+                  <Grid size={6}>
+                    <LoadingButton
+                      loading={loading}
+                      onClick={handleApiCall}
+                      disabled={disabled}
+                      variant="contained"
+                    >
+                      チャート分析
+                    </LoadingButton>
+                  </Grid>
+                  <Grid size={6}>
 
-                <LoadingButton
-                  loading={loading}
-                  onClick={handleApiCall}
-                  disabled={disabled}
-                  variant="contained"
-                >
-                  分析開始
-                </LoadingButton>
+                  <LoadingButton
+                    loading={loading}
+                    onClick={handleSimulate}
+                    disabled={disabled}
+                    variant="contained"
+                  >
+                    シミュレーション
+                  </LoadingButton>
+                  </Grid>
+                </Grid>
+                
               </Stack>
             </Paper>
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel3'}
+          expanded={expanded === 'panel3' || expanded === 'simulate'}
           onChange={handleExpand('panel3')}
         >
           <AccordionSummary
